@@ -1,3 +1,4 @@
+import 'package:f_web_service_template/ui/controllers/news_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'empy_view.dart';
@@ -5,7 +6,9 @@ import 'loaded_view.dart';
 import 'loading_view.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+  HomePage({Key? key}) : super(key: key);
+
+  NewsController controller = Get.find<NewsController>();
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +18,21 @@ class HomePage extends StatelessWidget {
         child: Column(
           children: [
             const Image(image: AssetImage("assets/images/logo.png")),
-            Container(child: Text('Logic goes here'))
+            GetX<NewsController>(
+              builder: (controller) {
+                if (controller.loading) {
+                  return const LoadingView();
+                } else {
+                  if (controller.news.isEmpty) {
+                    //logInfo('Home -> Empty list');
+                    return EmptyNews();
+                  } else {
+                    //logInfo('Home -> List with Data');
+                    return LoadedView();
+                  }
+                }
+              },
+            )
           ],
         ),
       ),
